@@ -70,6 +70,21 @@
       font-size: 18px;
       font-weight: bold;
     }
+    .play-again {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .play-again:hover {
+      background-color: #45a049;
+    }
   </style>
 </head>
 <body>
@@ -77,18 +92,22 @@
     <h1>Find the Calf! 🐄</h1>
     <div id="board" class="board"></div>
     <div id="message" class="message">Choose a box — will you find the calf?</div>
+    <button id="play-again" class="play-again" style="display: none;">Play Again</button>
   </div>
 
-  <audio id="moo-sound" src="https://www.soundjay.com/animal/cow-moo1.mp3"></audio>
-  <audio id="fail-moo" src="https://www.soundjay.com/animal/cow-moo2.mp3"></audio>
+  <audio id="moo-sound" src="https://freesound.org/data/previews/100/100587_1770464-lq.mp3"></audio>
+  <audio id="fail-moo" src="https://freesound.org/data/previews/58/58277_634166-lq.mp3"></audio>
+  <audio id="ambient-moo" src="https://freesound.org/data/previews/100/100587_1770464-lq.mp3"></audio>
 
   <script>
     const board = document.getElementById('board');
     const message = document.getElementById('message');
+    const playAgainButton = document.getElementById('play-again');
     const mooSound = document.getElementById('moo-sound');
     const failMoo = document.getElementById('fail-moo');
+    const ambientMoo = document.getElementById('ambient-moo');
 
-    const numBoxes = 12; // More boxes
+    const numBoxes = 12;
     let correctIndex = 0;
     let opened = false;
 
@@ -97,6 +116,11 @@
       board.innerHTML = '';
       correctIndex = Math.floor(Math.random() * numBoxes);
       board.style.gridTemplateColumns = `repeat(${Math.ceil(Math.sqrt(numBoxes))}, 1fr)`;
+      message.textContent = 'Choose a box — will you find the calf?';
+      playAgainButton.style.display = 'none';
+
+      // Play ambient moo sound at the start of each game
+      ambientMoo.play();
 
       for (let i = 0; i < numBoxes; i++) {
         const card = document.createElement('div');
@@ -127,11 +151,14 @@
         failMoo.play();
       }
       revealAll();
+      playAgainButton.style.display = 'block';
     }
 
     function revealAll() {
       document.querySelectorAll('.card').forEach(c => c.classList.add('open'));
     }
+
+    playAgainButton.addEventListener('click', setup);
 
     setup();
   </script>
